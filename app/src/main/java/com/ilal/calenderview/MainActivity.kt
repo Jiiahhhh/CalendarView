@@ -1,6 +1,7 @@
 package com.ilal.calenderview
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ilal.calenderview.databinding.ActivityMainBinding
@@ -28,15 +29,34 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDate(){
         val datePicker = Calendar.getInstance()
+        val timePicker = Calendar.getInstance()
+
         val date = DatePickerDialog.OnDateSetListener {
                 view, year, month, day ->
             datePicker[Calendar.YEAR] = year
             datePicker[Calendar.MONTH] = month
             datePicker[Calendar.DAY_OF_MONTH] = day
-            val dateFormat = "dd-MMMM-yyyy"
+            val dateFormat = "EEE, d MMM yyyy"
             val simpleDateFormat = SimpleDateFormat(dateFormat, Locale.getDefault())
-            binding.text.text = simpleDateFormat.format(datePicker.time)
+            binding.date.text = simpleDateFormat.format(datePicker.time)
+
+            val time = TimePickerDialog.OnTimeSetListener {
+                    view, hour, minute ->
+                timePicker[Calendar.HOUR_OF_DAY] = hour
+                timePicker[Calendar.MINUTE] = minute
+                val dateFormat = "h:mm a"
+                val simpleDateFormat = SimpleDateFormat(dateFormat, Locale.getDefault())
+                binding.time.text = simpleDateFormat.format(timePicker.time)
+            }
+
+            TimePickerDialog(
+                this@MainActivity, time,
+                timePicker[Calendar.HOUR_OF_DAY],
+                timePicker[Calendar.MINUTE],
+                true
+            ).show()
         }
+
         DatePickerDialog(
             this@MainActivity,date,
             datePicker[Calendar.YEAR],
